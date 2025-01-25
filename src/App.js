@@ -8,7 +8,7 @@ function App() {
   const [sudoku, setSudoku] = React.useState(null);
 
   useEffect(() => {
-    setSudoku(getSudoku());
+    setSudoku(getSudoku("expert"));
   }, []);
 
   return (

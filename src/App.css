@@ -12,3 +12,56 @@
   font-size: calc(10px + 2vmin);
   color: white;
 }
+
+.board {
+  display: "flex";
+  flex-direction: "column";
+  margin-bottom: "20px";
+  background-color: #d2c5f1;
+}
+
+.board-container {
+  display: inline-block;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(9, 45px);
+  grid-template-rows: repeat(9, 45px);
+  grid-gap: 0px;
+}
+
+.cell {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid #ccc;
+  /* Default border for individual cells */
+}
+
+.cell:focus {
+  background-color: yellow !important;
+}
+
+.selection {
+  width: 40px;
+  height: 40px;
+  margin: 2.5px;
+  font-size: 16px;
+}
+
+.selection:focus {
+  background-color: yellow;
+}
+
+.remove {
+  width: 120px;
+  height: 40px;
+  margin: 2.5px;
+  font-size: 16px;
+  background-color: red;
+  color: white;
+  border: none;
+}

@@ -7,8 +7,8 @@ const createGrid = (initialDigits) => {
         grid.push([]);
         for (let j = 0; j < 9; j++) {
             grid[i].push({
-                value: initialDigits[i * 9 + j] === 0 ? "" : initialDigits[i * 9 + j],
-                initial: initialDigits[i * 9 + j] !== 0, // Mark initial cells
+                value: initialDigits[i * 9 + j] === "-" ? "" : initialDigits[i * 9 + j],
+                initial: initialDigits[i * 9 + j] !== "-", // Mark initial cells
             });
         }
     }
@@ -27,6 +27,8 @@ const SudokuBoard = ({ initialDigits, solution }) => {
             const newGrid = [...grid];
             newGrid[row][col].value = selectedDigit;
             setGrid(newGrid);
+            setSelectedDigit(null);
+            setSelectedCell(null);
         } else {
             setSelectedCell({ row, col });
         }
@@ -38,6 +40,8 @@ const SudokuBoard = ({ initialDigits, solution }) => {
             const newGrid = [...grid];
             newGrid[selectedCell.row][selectedCell.col].value = "";
             setGrid(newGrid);
+            setSelectedDigit(null);
+            setSelectedCell(null);
         }
     };
 
@@ -47,50 +51,55 @@ const SudokuBoard = ({ initialDigits, solution }) => {
     };
 
     return (
-        <div>
-            <div style={{ display: "flex", flexDirection: "column", marginBottom: "20px" }}>
+        <div className={"board"}>
+            <div className={"board"}>
                 <div style={{ display: "flex" }}>
                     {Array.from({ length: 9 }, (_, i) => (
                         <button
+                            className={"selection"}
                             key={i}
                             onClick={() => handleDigitSelect(i + 1)}
-                            style={{
-                                width: "40px",
-                                height: "40px",
-                                margin: "5px",
-                                fontSize: "16px",
-                            }}
                         >
                             {i + 1}
                         </button>
                     ))}
                 </div>
-                <button onClick={handleDelete} style={{ marginTop: "10px" }}>
-                    Delete
+                <button onClick={handleDelete} className={"remove"}>
+                    Remove
                 </button>
             </div>
 
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(9, 40px)", gap: "5px" }}>
-                {grid.map((row, rowIndex) =>
-                    row.map((cell, colIndex) => (
-                        <div
-                            key={`${rowIndex}-${colIndex}`}
-                            onClick={() => handleCellClick(rowIndex, colIndex)}
-                            style={{
-                                width: "40px",
-                                height: "40px",
-                                display: "flex",
-                                justifyContent: "center",
-                                alignItems: "center",
-                                border: "1px solid black",
-                                backgroundColor: cell.initial ? "#e0e0e0" : "#fff",
-                                cursor: cell.initial ? "not-allowed" : "pointer",
-                            }}
-                        >
-                            {cell.value !== "" ? cell.value : ""}
-                        </div>
-                    ))
-                )}
+            <div className="board-container">
+                <div className="grid">
+                    {grid.map((row, rowIndex) =>
+                        row.map((cell, colIndex) => {
+                            // Determine whether to add borders based on the 3x3 grid
+                            const isTopBorder = rowIndex % 3 === 0 && rowIndex !== 0;
+                            const isBottomBorder = (rowIndex + 1) % 3 === 0 && rowIndex !== 8;
+                            const isLeftBorder = colIndex % 3 === 0 && colIndex !== 0;
+                            const isRightBorder = (colIndex + 1) % 3 === 0 && colIndex !== 8;
+
+                            return (
+                                <div
+                                    className="cell"
+                                    key={`${rowIndex}-${colIndex}`}
+                                    onClick={() => handleCellClick(rowIndex, colIndex)}
+                                    style={{
+                                        color: cell.initial ? "#000" : "#00f",
+                                        backgroundColor: cell.initial ? "#888" : "#fff",
+                                        cursor: cell.initial ? "not-allowed" : "pointer",
+                                        borderTop: isTopBorder ? "2px solid black" : "",
+                                        borderBottom: isBottomBorder ? "2px solid black" : "",
+                                        borderLeft: isLeftBorder ? "2px solid black" : "",
+                                        borderRight: isRightBorder ? "2px solid black" : "",
+                                    }}
+                                >
+                                    {cell.value !== "" ? cell.value : ""}
+                                </div>
+                            );
+                        })
+                    )}
+                </div>
             </div>
         </div>
     );
